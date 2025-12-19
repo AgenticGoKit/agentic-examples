@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kunalkushwaha/agenticgokit/core/vnext"
 )
 
@@ -20,26 +21,30 @@ type Config struct {
 
 // LoadConfig loads configuration from environment variables
 func LoadConfig() (*Config, error) {
-	apiKey := os.Getenv("HUGGINGFACE_API_KEY")
+	// Load .env file if it exists (ignore error if file doesn't exist)
+	_ = godotenv.Load()
+
+	// Check for API key from LLM_API_KEY environment variable
+	apiKey := os.Getenv("LLM_API_KEY")
 	if apiKey == "" {
-		return nil, fmt.Errorf("HUGGINGFACE_API_KEY environment variable not set\nPlease set it with: $env:HUGGINGFACE_API_KEY=\"your-key\"")
+		return nil, fmt.Errorf("LLM_API_KEY environment variable not set\nPlease enable LLM_API_KEY in .env")
+	}
+
+	// Require LLM_PROVIDER to be explicitly set
+	provider := os.Getenv("LLM_PROVIDER")
+	if provider == "" {
+		return nil, fmt.Errorf("LLM_PROVIDER environment variable not set\nPlease set it with: $env:LLM_PROVIDER=\"your-provider\" (e.g., \"openrouter\", \"huggingface\")")
+	}
+
+	// Require LLM_MODEL to be explicitly set
+	model := os.Getenv("LLM_MODEL")
+	if model == "" {
+		return nil, fmt.Errorf("LLM_MODEL environment variable not set\nPlease set it with: $env:LLM_MODEL=\"your-model\" (e.g., \"openai/gpt-4o-mini\", \"Qwen/Qwen2.5-72B-Instruct\")")
 	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
-	}
-
-	provider := os.Getenv("LLM_PROVIDER")
-	if provider == "" {
-		provider = "huggingface"
-	}
-
-	model := os.Getenv("LLM_MODEL")
-	if model == "" {
-		// Qwen 2.5 72B is excellent at following instructions and structured formats
-		// Alternative: meta-llama/Llama-3.1-70b-Instruct, mistralai/Mistral-Large-Instruct-2411
-		model = "Qwen/Qwen2.5-72B-Instruct"
 	}
 
 	return &Config{
@@ -51,15 +56,15 @@ func LoadConfig() (*Config, error) {
 }
 
 // ValidateAPIConnection verifies the API key works by making a test request
-func ValidateAPIConnection(apiKey string) error {
+func ValidateAPIConnection(apiKey string, provider string, model string) error {
 	log.Println("🔍 Validating API connection...")
 
 	testAgent, err := vnext.QuickChatAgentWithConfig("ValidationTest", &vnext.Config{
 		Name:    "validation_test",
 		Timeout: 15 * time.Second,
 		LLM: vnext.LLMConfig{
-			Provider: "huggingface",
-			Model:    "Qwen/Qwen2.5-72B-Instruct",
+			Provider: provider,
+			Model:    model,
 			APIKey:   apiKey,
 		},
 	})
