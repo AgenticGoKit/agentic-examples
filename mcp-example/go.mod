@@ -1,8 +1,8 @@
-module test1
+module test
 
 go 1.25.5
 
-require github.com/agenticgokit/agenticgokit v0.5.7
+require github.com/agenticgokit/agenticgokit v0.5.9
 
 require (
 	github.com/BurntSushi/toml v1.5.0 // indirect

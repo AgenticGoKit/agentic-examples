@@ -4,8 +4,8 @@ github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0 h1:Gt0j3wceWMwPmiazCa8MzMA0
 github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0/go.mod h1:Ot/6aikWnKWi4l9QB7qVSwa8iMphQNqkWALMoNT3rzM=
 github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
 github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
-github.com/agenticgokit/agenticgokit v0.5.7 h1:9TknZLztftx9deJaDL7R+kVehv/q2nhnq0/AKMHkykw=
-github.com/agenticgokit/agenticgokit v0.5.7/go.mod h1:0EwU951CZIGYwEOLnC5hJbC9lhNvM85FhrL6NTTDIZo=
+github.com/agenticgokit/agenticgokit v0.5.9 h1:CCSDH33QMmQOpjhvXk2BxRD+gtP20yxwWhj88prNULw=
+github.com/agenticgokit/agenticgokit v0.5.9/go.mod h1:0EwU951CZIGYwEOLnC5hJbC9lhNvM85FhrL6NTTDIZo=
 github.com/cenkalti/backoff/v5 v5.0.2 h1:rIfFVxEf1QsI7E1ZHfp/B4DF/6QBAUhmgkxc0H7Zss8=
 github.com/cenkalti/backoff/v5 v5.0.2/go.mod h1:rkhZdG3JZukswDf7f0cwqPNk4K0sa+F97BxZthm/crw=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=

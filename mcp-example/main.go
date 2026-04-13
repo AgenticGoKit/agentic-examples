@@ -21,33 +21,33 @@ func main() {
 
 	// Step 1: Check for authentication token
 	authToken := os.Getenv("MCP_GATEWAY_AUTH_TOKEN")
-	if authToken == "" {
-		fmt.Println("❌ MCP_GATEWAY_AUTH_TOKEN not set")
-		fmt.Println()
-		fmt.Println("Please set your auth token:")
-		fmt.Println("   PowerShell: $env:MCP_GATEWAY_AUTH_TOKEN='your-token-here'")
-		fmt.Println("   Bash: export MCP_GATEWAY_AUTH_TOKEN='your-token-here'")
-		fmt.Println()
-		fmt.Println("Get your token by running:")
-		fmt.Println("   docker mcp gateway run --port 8012 --transport sse")
-		return
-	}
+	/*	if authToken == "" {
+			fmt.Println("❌ MCP_GATEWAY_AUTH_TOKEN not set")
+			fmt.Println()
+			fmt.Println("Please set your auth token:")
+			fmt.Println("   PowerShell: $env:MCP_GATEWAY_AUTH_TOKEN='your-token-here'")
+			fmt.Println("   Bash: export MCP_GATEWAY_AUTH_TOKEN='your-token-here'")
+			fmt.Println()
+			fmt.Println("Get your token by running:")
+			fmt.Println("   docker mcp gateway run --port 8012 --transport sse")
+			return
+		}
+	*/
 	fmt.Printf("✓ Auth token configured (%d chars)\n\n", len(authToken))
 
 	// Step 2: Configure the MCP server
 	// This tells AgenticGoKit how to connect to your MCP server
 	mcpServer := agk.MCPServer{
-		Name:    "docker-mcp-gateway", // Identifier for this server
-		Type:    "http_sse",           // Transport type (SSE, websocket, stdio)
-		Address: "localhost",          // Server hostname
-		Port:    8012,                 // Server port
-		Enabled: true,                 // Enable this server
+		Name:    "docker-mcp-gateway-streaming",
+		Type:    "http_streaming",
+		Address: "http://localhost:3000/mcp",
+		Enabled: true,
 	}
 
 	fmt.Println("📡 MCP Server Configuration:")
 	fmt.Printf("   Name: %s\n", mcpServer.Name)
 	fmt.Printf("   Type: %s\n", mcpServer.Type)
-	fmt.Printf("   Endpoint: http://%s:%d/sse\n", mcpServer.Address, mcpServer.Port)
+	fmt.Printf("   Endpoint: %s\n", mcpServer.Address)
 	fmt.Println()
 
 	// Step 3: Create an agent with MCP tools
@@ -85,13 +85,15 @@ Available tool categories:
 			},
 		}).
 		// This is where the magic happens - register MCP tools!
-		WithTools(agk.WithMCP(mcpServer), agk.WithReasoningConfig(2, true)).
+		WithTools(agk.WithMCP(mcpServer), agk.WithReasoningConfig(10, true)).
+		WithObservability("mcp-example", "1.0").
 		Build()
 
 	if err != nil {
 		fmt.Printf("❌ Failed to create agent: %v\n", err)
 		return
 	}
+	defer agent.Cleanup(ctx)
 	fmt.Println("   ✓ Agent created successfully\n")
 
 	// Step 4: Get the MCP manager and check server health
@@ -166,7 +168,7 @@ Available tool categories:
 	fmt.Println()
 
 	// Example query that should use the get_current_time tool
-	query := "What time is it in UTC right now?"
+	query := "please fetch url www.plankeya.com"
 	fmt.Printf("💬 Query: %s\n\n", query)
 
 	result, err := agent.Run(ctx, query)
