@@ -2,11 +2,10 @@ module github.com/kunalkushwaha/agenticgokit/examples/vnext/story-writer-chat-v2
 
 go 1.24.1
 
-replace github.com/kunalkushwaha/agenticgokit => ../../..
-
 require (
 	github.com/gorilla/websocket v1.5.3
-	github.com/kunalkushwaha/agenticgokit v0.0.0-00010101000000-000000000000
+	github.com/joho/godotenv v1.5.1
+	github.com/kunalkushwaha/agenticgokit v0.4.7
 )
 
 require (

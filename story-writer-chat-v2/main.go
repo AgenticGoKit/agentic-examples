@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// Validate API connection
-	if err := config.ValidateAPIConnection(cfg.APIKey); err != nil {
+	if err := config.ValidateAPIConnection(cfg.APIKey, cfg.Provider, cfg.Model); err != nil {
 		log.Fatalf("❌ API validation failed: %v\nCheck your API key and network connection", err)
 	}
 	log.Println("✅ API connection validated")
